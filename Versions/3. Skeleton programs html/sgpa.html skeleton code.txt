@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGPA Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <h1>SGPA Prediction</h1>
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Initial Input Field for Number of Subjects -->
+        <label for="num_subjects">Enter number of subjects in the semester:</label>
+        <input type="number" id="num_subjects" name="num_subjects" value="{{ num_subjects }}" required><br><br>
+
+        {% if show_grade_inputs %}
+            <!-- Hidden field to retain number of subjects in the final submission -->
+            <input type="hidden" name="num_subjects" value="{{ num_subjects }}">
+
+            <!-- Loop to input grades for each subject based on the number of subjects -->
+            {% for i in subjects %}
+                <label>Enter grade for subject {{ forloop.counter }} (S, A, B, C, D, E, F):</label>
+                <input type="text" name="grade_{{ forloop.counter }}" maxlength="1" required><br><br>
+            {% endfor %}
+            <button type="submit" name="calculate">Calculate SGPA</button>
+        {% else %}
+            <button type="submit">Next</button>
+        {% endif %}
+    </form>
+
+    {% if sgpa is not None %}
+        <h2>Your SGPA: {{ sgpa }}</h2>
+    {% endif %}
+</body>
+</html>
